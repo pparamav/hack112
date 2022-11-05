@@ -11,16 +11,23 @@ from nltk.sentiment import SentimentIntensityAnalyzer
 ssl._create_default_https_context = ssl._create_unverified_context
 def sentReview():
     goodUrl = False
+    movieName = input('Type Movie Name')
+    newName = ''
+    for c in movieName:
+        if c == ' ':
+            newName += '_'
+        else:
+            newName += c
+    newName = newName.lower()
     while goodUrl == False:
-        url = ("https://www.rottentomatoes.com/m/" + input('Type Movie Name') + 
+        url = ("https://www.rottentomatoes.com/m/" + newName + 
                "/reviews")
         try:
             page = urlopen(url)
         except:
             print('Bad Url')
-            continue
-
-
+            return
+            
         html = page.read().decode("utf-8")
 
         reviews = set()
