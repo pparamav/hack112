@@ -19,7 +19,7 @@ Press up if you think the movie is good
 Press down if you think it isn't 
 You will gain/loose score depending on whether the model says the critical sentiment agrees with you
 
-If you press 'r', you're put into lookup mode:
+If you restart the app and press 'r', you're put into lookup mode:
 Press 'n' to open up an entry box
 type in the movie you want to look up and click the enter button on the window
 Voila! The moive and the sentiment appears in the app
