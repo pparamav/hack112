@@ -43,11 +43,12 @@ def appStarted(app):
     app.timeDelay = 1000
     app.timePass = 0
     app.totalTime = 100000
-    app.loss = 0
+    app.gain = 0
+    app.extraTime=0
 
 def keyPressed(app, event):
     initial = app.score
-    if app.qNo<len(app.movie):
+    if app.qNo<len(app.movie) and app.timePass<app.totalTime+app.extraTime:
         if event.key=="Up" or event.key=="Down":
             if event.key=="Up":
                 app.score+=app.movie[app.qNo].getScore()
@@ -58,7 +59,8 @@ def keyPressed(app, event):
                 url = app.movie[app.qNo].getURL()
                 app.image = app.loadImage(url)
         if app.score>initial:
-            app.loss-=(3*app.timeDelay/app.totalTime)*app.imageSize[1]
+            app.gain-=(6*app.timeDelay/app.totalTime)*app.imageSize[1]
+            app.extraTime+=6*app.timeDelay
     else:
         print('Invalid')
 
@@ -66,16 +68,20 @@ def timerFired(app):
     app.timePass+=app.timeDelay
 
 def redrawAll(app, canvas):
-    if app.qNo==len(app.movie):
+    sizeY = app.imageSize[1]
+    loss = (app.timePass/app.totalTime)*sizeY+app.gain
+    if loss>sizeY or app.qNo==len(app.movie):
         canvas.create_text(app.width//2, app.height//2, 
                         text=f"{app.score}",font="Arial 50")
     else:
         canvas.create_text(app.width//2, app.margin, 
-                        text="Yes/No")
+                        text=f"Yes/No {app.timePass}")
         canvas.create_text(app.width//8, app.height//2, 
                         text=f"{app.score}",font="Arial 40")
         drawMovie(app, canvas)
         drawLifeline(app, canvas)
+    
+        
 
 #helper1: page 1 draw selection
 
@@ -99,11 +105,15 @@ def drawLifeline(app, canvas):
     #boarder
     canvas.create_rectangle(cx-sizeX//2,cy-sizeY//2,cx+sizeX//2,cy+sizeY//2, outline="black")
     #lifeline
-    loss = (app.timePass/app.totalTime)*sizeY+app.loss
-    if loss<sizeY//2:
-        canvas.create_rectangle(cx-sizeX//2,cy-sizeY//2+loss,cx+sizeX//2,cy+sizeY//2, fill="green")
-    else:
-        canvas.create_rectangle(cx-sizeX//2,cy-sizeY//2+loss,cx+sizeX//2,cy+sizeY//2, fill="red")
+    loss = (app.timePass/app.totalTime)*sizeY+app.gain
+    if loss<0:
+        loss=0
+    if loss<sizeY:
+        if loss<sizeY//2:
+            canvas.create_rectangle(cx-sizeX//2,cy-sizeY//2+loss,cx+sizeX//2,cy+sizeY//2, fill="green")
+        else:
+            canvas.create_rectangle(cx-sizeX//2,cy-sizeY//2+loss,cx+sizeX//2,cy+sizeY//2, fill="red")
+
 runApp(width=400, height=400)
 
 
