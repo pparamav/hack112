@@ -10,9 +10,42 @@ class Movie(object):
     def __init__(self, name, url):
         self.name = name
         self.score = len(name) #initiated by NLP model
-        self.url = url
+                self.url = url
         # resize: self.image2 = self.scaleImage(self.image1, 2/3)
-
+        url = ("https://www.rottentomatoes.com/m/" + self.name.replace(' ', '_') 
+               + "/reviews")
+        try:
+            page = urlopen(url)
+        except:
+            print(self.name, 'Bad Url')
+            self.score = 0
+            return
+        html = page.read().decode("utf-8")
+        reviews = set()
+        firstLine = True
+        for review in html.split("""<div class="the_review" data-qa="review-text">"""):
+            if firstLine == True:
+                firstLine = False
+                continue
+            reviewEnd = review.find("</div>")
+            reviews.add(review[ : reviewEnd].strip())
+        scores = []
+        for elem in reviews:
+            newElem = elem.split()
+            feats = dict([(word, True) for word in newElem])
+            newScore = classifier.classify(feats)
+            scores.append(newScore)
+        negScores = 0
+        posScores = 0
+        for elem in scores:
+            if elem == 'negative':
+                negScores += 1
+            elif elem == 'positive':
+                posScores += 1
+        if posScores >= negScores:
+            self.score = 1
+        elif posScores < negScores:
+            self.score = -1
     def getScore(self):
         return self.score
         #WebScraping -> Rottentomato + NLP
