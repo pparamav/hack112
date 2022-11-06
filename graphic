@@ -1,0 +1,107 @@
+import cs112_f22_hack112_linter
+import math, copy
+from cmu_112_graphics import *
+from tkinter import *
+from PIL import Image,ImageTk
+import urllib.request
+
+#All objects
+class Movie(object):
+    def __init__(self, name, url):
+        self.name = name
+        self.score = len(name) #initiated by NLP model
+        self.url = url
+        # resize: self.image2 = self.scaleImage(self.image1, 2/3)
+
+    def getScore(self):
+        return self.score
+        #WebScraping -> Rottentomato + NLP
+
+    def getURL(self):
+        return self.url
+
+    def getName(self):
+        return self.name
+
+def initMovieList(app):
+    initMovieList = []
+    fullList=[Movie("Game of Thrones", "https://upload.wikimedia.org/wikipedia/en/e/e0/Game_of_Thrones_Season_8.png"),
+            Movie("Dark Knight", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOH1Z3WEv-NS_ahc7NSQRz1LTh813Z6sMmI_E7d1_FYpQd0MxY"),
+            Movie("Game", "https://upload.wikimedia.org/wikipedia/en/e/e0/Game_of_Thrones_Season_8.png"),
+            Movie("Dark", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOH1Z3WEv-NS_ahc7NSQRz1LTh813Z6sMmI_E7d1_FYpQd0MxY")]
+    for i in range(0,4):
+        initMovieList.append(fullList[i]) #later will change to random in allList
+    return initMovieList
+    
+#App
+
+def appStarted(app):
+    app.margin = min(app.width//2,app.height//10)
+    app.movie = initMovieList(app)
+    app.qNo = 0 #qestion No.
+    app.score = 0
+    url = app.movie[app.qNo].getURL()
+    app.image = app.loadImage(url)
+    app.imageSize = (app.width//2, app.height//1.5)
+    app.timeDelay = 1000
+
+def keyPressed(app, event):
+    if app.qNo<len(app.movie):
+        if event.key=="Up" or event.key=="Down":
+            if event.key=="Up":
+                app.score+=app.movie[app.qNo].getScore()
+            elif event.key=="Down":
+                app.score-=app.movie[app.qNo].getScore()
+            app.qNo += 1
+            if app.qNo != len(app.movie):
+                url = app.movie[app.qNo].getURL()
+                app.image = app.loadImage(url)
+    else:
+        print('Invalid')
+
+def timerFired(app):
+    
+    pass
+
+def redrawAll(app, canvas):
+    if app.qNo==len(app.movie):
+        canvas.create_text(app.width//2, app.height//2, 
+                        text=f"{app.score}",font="Arial 50")
+    else:
+        canvas.create_text(app.width//2, app.margin, 
+                        text="Yes/No")
+        canvas.create_text(app.width//8, app.height//2, 
+                        text=f"{app.score}",font="Arial 40")
+        drawMovie(app, canvas)
+        drawLifeline(app, canvas)
+        
+
+
+#helper1: page 1 draw selection
+
+def drawMovie(app, canvas):
+    cx = app.width//2
+    cy = app.height//2
+    canvas.create_text(app.width//2, app.height-app.margin, 
+                        text=f"{app.movie[app.qNo].getName()}")
+    imageWidth, imageHeight = app.image.size
+    desiredWidth, desiredHeight = app.imageSize #desiredImageSize
+    ratio = min(desiredWidth/imageWidth,imageHeight/desiredHeight)
+    image = app.scaleImage(app.image, ratio)
+    canvas.create_image(cx,cy, image=ImageTk.PhotoImage(image))
+
+#User Experience
+def drawLifeline(app, canvas):
+    cx = app.width//8*7
+    cy = app.height//2
+    sizeX = app.width//16
+    sizeY = app.imageSize[1] #height of the poster
+    #boarder
+    canvas.create_rectangle(cx-sizeX//2,cy-sizeY//2,cx+sizeX//2,cy+sizeY//2, outline="black")
+    #lifeline
+    canvas.create_rectangle(cx-sizeX//2,cy-sizeY//2,cx+sizeX//2,cy+sizeY//2, outline="black")
+
+runApp(width=400, height=400)
+
+
+    # img= ImageTk.PhotoImage(Image.open("Screen Shot 2565-10-31 at 14.09.27.png"))
