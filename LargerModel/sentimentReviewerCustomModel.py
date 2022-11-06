@@ -67,6 +67,8 @@ def sentReview(movieName):
             posScores += 1
     if negScores >= posScores:
         print('Bad Movie')
+    elif negScores == posScores:
+        print('Neutral Movie')
     else:
         print('Good Movie')
     
