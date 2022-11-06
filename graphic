@@ -10,7 +10,7 @@ class Movie(object):
     def __init__(self, name, url):
         self.name = name
         self.score = len(name) #initiated by NLP model
-                self.url = url
+        self.url = url
         # resize: self.image2 = self.scaleImage(self.image1, 2/3)
         url = ("https://www.rottentomatoes.com/m/" + self.name.replace(' ', '_') 
                + "/reviews")
