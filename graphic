@@ -1,9 +1,16 @@
-import cs112_f22_hack112_linter
 import math, copy
 from cmu_112_graphics import *
 from tkinter import *
 from PIL import Image,ImageTk
 import urllib.request
+from urllib.request import urlopen
+import nltk
+import pickle
+import ssl
+from bs4 import BeautifulSoup
+classifierF = open('naivebayesA.pickle', 'rb')
+classifier = pickle.load(classifierF)
+ssl._create_default_https_context = ssl._create_unverified_context
 
 #All objects
 class Movie(object):
