@@ -1,16 +1,9 @@
+import cs112_f22_hack112_linter
 import math, copy
 from cmu_112_graphics import *
 from tkinter import *
 from PIL import Image,ImageTk
 import urllib.request
-from urllib.request import urlopen
-import nltk
-import pickle
-import ssl
-from bs4 import BeautifulSoup
-classifierF = open('naivebayesA.pickle', 'rb')
-classifier = pickle.load(classifierF)
-ssl._create_default_https_context = ssl._create_unverified_context
 
 #All objects
 class Movie(object):
@@ -53,9 +46,9 @@ class Movie(object):
             self.score = 1
         elif posScores < negScores:
             self.score = -1
+
     def getScore(self):
         return self.score
-        #WebScraping -> Rottentomato + NLP
 
     def getURL(self):
         return self.url
@@ -120,8 +113,7 @@ def redrawAll(app, canvas):
                         text=f"{app.score}",font="Arial 40")
         drawMovie(app, canvas)
         drawLifeline(app, canvas)
-    
-        
+        drawQestionScore(app,canvas)
 
 #helper1: page 1 draw selection
 
@@ -154,7 +146,21 @@ def drawLifeline(app, canvas):
         else:
             canvas.create_rectangle(cx-sizeX//2,cy-sizeY//2+loss,cx+sizeX//2,cy+sizeY//2, fill="red")
 
+def drawQestionScore(app,canvas):
+    cx = app.width//8
+    cy = app.height*9//10
+    score = app.movie[app.qNo].getScore()
+    r = app.width//8
+    canvas.create_text(cx, app.height*8//10, text="score")
+    if score<0:
+        canvas.create_text(cx, cy, text=f"{score}", font="Arial 30", fill= "red")
+    else:
+        canvas.create_text(cx, cy, text=f"{score}", font="Arial 30", fill= "green")
+    
+
+
 runApp(width=400, height=400)
+ 
 
 
     # img= ImageTk.PhotoImage(Image.open("Screen Shot 2565-10-31 at 14.09.27.png"))
