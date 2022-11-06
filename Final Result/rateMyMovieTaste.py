@@ -29,7 +29,7 @@ class Movie(object):
         try:
             page = urlopen(url)
         except:
-            print(self.name, 'Bad Url')
+#             print(self.name, 'Bad Url')
             self.score = 0
             return
         html = page.read().decode("utf-8")
