@@ -36,4 +36,6 @@ Finally, the model outputs whether the average sentiment was positive or negativ
 
 Included are two different models, one trained with more parameters, and the other trained for longer. Each model had a reported 80% accuracy in its prediction
 
+Here is the link to our github repository: https://github.com/pparamav/hack112
+
 Thank you and enjoy!
