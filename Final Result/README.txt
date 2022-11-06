@@ -25,7 +25,7 @@ type in the movie you want to look up and click the enter button on the window
 Voila! The moive and the sentiment appears in the app
 If the name is incorrect, a picture of the grinch will show instead. 
 
-Press 'r' to go back to taste-rating mode.
+Restart the app to go back to taste-rating mode
 
 How it was made:
 Our app uses a combination of web-scraping, natural language processing, and machine learning to produce our result.
