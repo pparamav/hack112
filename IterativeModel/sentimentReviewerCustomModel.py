@@ -52,6 +52,7 @@ def sentReview(movieName):
     neuSum = 0
     sent = SentimentIntensityAnalyzer()
     scores = []
+    #From https://nltk-trainer.readthedocs.io/en/latest/train_classifier.html
     for elem in reviews:
         newElem = elem.split()
         feats = dict([(word, True) for word in newElem])
